@@ -31,19 +31,35 @@ public class ScrapeData {
             WebElement starRatingElement = row.findElement(By.cssSelector("div.stars-rating-lg span.legend"));
             movie.setStarRating(starRatingElement.getText());
 
-            WebElement descriptionElement = row.findElement(By.cssSelector("p"));
+            WebElement descriptionElement = row
+                    .findElement(By.cssSelector("div:nth-of-type(3) p:not(:empty)"));
             movie.setDescription(descriptionElement.getText());
 
-            WebElement releaseDateElement = new WebDriverWait(driver, 10).until(ExpectedConditions
-                    .presenceOfElementLocated(By.cssSelector("ul.list-separator.list-title strong + a")));
-            movie.setReleaseDate(releaseDateElement.getText());
+            WebElement releaseDateElement = new WebDriverWait(driver, 10)
+                    .until(ExpectedConditions
+                            .presenceOfElementLocated(By.cssSelector("ul.list-separator.list-title strong + a")));
+            String releaseDate = releaseDateElement.getText();
 
-            List<WebElement> genreElements = row.findElements(By.cssSelector("ul.list-separator.list-title li a"));
+            WebElement releaseYearElement = new WebDriverWait(driver, 10)
+                    .until(ExpectedConditions.presenceOfElementLocated(
+                            By.cssSelector("ul.list-separator.list-title a[href*='release_year']")));
+            String releaseYear = releaseYearElement.getText();
+
+            movie.setReleaseDate(releaseDate + " " + releaseYear);
+            List<WebElement> genreElements = row.findElements(By.cssSelector("ul.list-separator.list-title li > a"));
             List<String> genres = new ArrayList<>();
             for (WebElement genreElement : genreElements) {
                 genres.add(genreElement.getText());
+
             }
             movie.setGenre(genres);
+            List<WebElement> castElements = row.findElements(By.cssSelector("ul.list-separator:not(.list-title) li a"));
+            List<String> cast = new ArrayList<>();
+            for (WebElement castElement : castElements) {
+                cast.add(castElement.getText());
+            }
+
+            movie.setCast(cast);
 
             movies.add(movie);
         }
@@ -56,6 +72,7 @@ public class ScrapeData {
             System.out.println("Description: " + movie.getDescription());
             System.out.println("Release Date: " + movie.getReleaseDate());
             System.out.println("Genres: " + movie.getGenres());
+            System.out.println("Cast: " + movie.getCasts());
             System.out.println("Rating: " + movie.getStarRating());
             System.out.println();
         }

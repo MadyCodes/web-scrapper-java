@@ -8,8 +8,8 @@ public class Movie {
     private String description;
     private String releaseDate;
     private List<String> genres;
+    private List<String> cast;
     private String duration;
-    private String cast;
     private String director;
 
     // Getters and setters
@@ -61,11 +61,11 @@ public class Movie {
         this.duration = duration;
     }
 
-    public String getCast() {
+    public List<String> getCasts() {
         return cast;
     }
 
-    public void setCast(String cast) {
+    public void setCast(List<String> cast) {
         this.cast = cast;
     }
 

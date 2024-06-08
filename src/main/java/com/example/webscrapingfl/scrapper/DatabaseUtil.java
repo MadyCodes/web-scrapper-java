@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
+// import java.util.Map;
+// import java.util.UUID;
+// import java.util.stream.Collectors;
 
 import com.example.webscrapingfl.scrapper.entity.Movie;
 
@@ -31,6 +32,25 @@ public class DatabaseUtil {
 
         try (Connection conn = DriverManager.getConnection(dbUrl, username, password)) {
             if (tableName.equals("movies")) {
+                Connection connection = DriverManager.getConnection(dbUrl, username, password);
+                Statement statement = connection.createStatement();
+                String createTableQuery = "CREATE TABLE IF NOT EXISTS movies (" +
+                        "id INT AUTO_INCREMENT, " +
+                        "title VARCHAR(255), " +
+                        "release_date VARCHAR(255), " +
+                        "PRIMARY KEY (id)" +
+                        ")";
+                String createTableQueryWithAllFields = "CREATE TABLE IF NOT EXISTS movieDetails (" +
+                        "id INT AUTO_INCREMENT, " +
+                        "title VARCHAR(255), " +
+                        "description TEXT, " +
+                        "genre VARCHAR(255), " +
+                        "cast VARCHAR(255), " +
+                        "PRIMARY KEY (id)" +
+                        ")";
+
+                statement.executeUpdate(createTableQuery);
+                statement.executeUpdate(createTableQueryWithAllFields);
                 try (PreparedStatement pstmt = conn
                         .prepareStatement("INSERT INTO movies (title, release_date) VALUES (?,?)")) {
                     for (Movie movie : movies) {
@@ -38,9 +58,25 @@ public class DatabaseUtil {
                         pstmt.setString(2, movie.getReleaseDate());
                         pstmt.addBatch();
                     }
+
                     pstmt.executeBatch();
                     System.out.println("Data stored in SQL");
                 }
+                try (PreparedStatement pstmt = conn
+                        .prepareStatement(
+                                "INSERT INTO movieDetails (title, description, genre, cast) VALUES (?,?,?,?)")) {
+                    for (Movie movie : movies) {
+                        pstmt.setString(1, movie.getTitle());
+                        pstmt.setString(2, movie.getDescription());
+                        pstmt.setString(3, movie.getGenres().toString());
+                        pstmt.setString(4, movie.getCasts().toString());
+                        pstmt.addBatch();
+                    }
+
+                    pstmt.executeBatch();
+                    System.out.println("Data stored in SQL");
+                }
+
             } else {
                 try (PreparedStatement pstmt = conn
                         .prepareStatement("INSERT INTO tv_shows (title, release_date) VALUES (?,?)")) {

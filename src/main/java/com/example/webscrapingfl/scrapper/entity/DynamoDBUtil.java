@@ -32,7 +32,7 @@ public class DynamoDBUtil {
                                 "title", new AttributeValue(getNonNullValue(movie.getTitle())),
                                 "description", new AttributeValue(getNonNullValue(movie.getDescription())),
                                 "genre", new AttributeValue(getNonNullValue(movie.getGenres())),
-                                "cast", new AttributeValue(getNonNullValue(movie.getCast())),
+                                "cast", new AttributeValue(getNonNullValue(movie.getCasts())),
                                 "director", new AttributeValue(getNonNullValue(movie.getDirector()))));
                 dynamoDbClient.putItem(request);
             }
@@ -45,13 +45,16 @@ public class DynamoDBUtil {
                 writer.writeNext(header);
 
                 for (Movie movie : movies) {
+                    String castString = movie.getCasts() != null ? String.join(",",
+                            movie.getCasts().stream().map(Object::toString).collect(Collectors.toList())) : "";
+                    String genreString = movie.getGenres() != null ? String.join(",",
+                            movie.getGenres().stream().map(Object::toString).collect(Collectors.toList())) : "";
                     String[] data = new String[] {
                             UUID.randomUUID().toString(),
                             movie.getTitle(),
-                            movie.getTitle(),
-                            String.join(",",
-                                    movie.getGenres().stream().map(Object::toString).collect(Collectors.toList())),
-                            movie.getTitle(),
+                            movie.getDescription(),
+                            genreString,
+                            castString,
                             movie.getTitle()
                     };
                     writer.writeNext(data);
