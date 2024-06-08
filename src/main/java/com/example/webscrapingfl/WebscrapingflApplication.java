@@ -30,7 +30,7 @@ public class WebscrapingflApplication {
             System.setProperty("webdriver.chrome.driver",
                     "/Users/vishnumadhav/Desktop/chromedriver-mac-arm64-final/chromedriver");
             WebDriver driver = new ChromeDriver();
-            ExecutorService executor = Executors.newFixedThreadPool(5);
+            ExecutorService executor = Executors.newFixedThreadPool(1);
             ScrapeData scrape = new ScrapeData();
             // Scrape data
             scrape.scrapeData(driver, "https://elcinema.com/en/now/", "movie");
