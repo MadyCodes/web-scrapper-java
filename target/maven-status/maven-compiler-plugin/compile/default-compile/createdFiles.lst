@@ -1,4 +1,4 @@
-com/example/webscrapingfl/DynamoDBUtil.class
-com/example/webscrapingfl/Movie.class
-com/example/webscrapingfl/DatabaseUtil.class
-com/example/webscrapingfl/ScrapeData.class
+com/example/webscrapingfl/WebscrapingflApplication.class
+com/example/webscrapingfl/scrapper/entity/TVShow.class
+com/example/webscrapingfl/scrapper/DatabaseUtil.class
+com/example/webscrapingfl/scrapper/entity/Movie.class

@@ -31,21 +31,38 @@ public class ScrapeData {
             WebElement starRatingElement = row.findElement(By.cssSelector("div.stars-rating-lg span.legend"));
             movie.setStarRating(starRatingElement.getText());
 
-            WebElement descriptionElement = row
-                    .findElement(By.cssSelector("div:nth-of-type(3) p:not(:empty)"));
+            WebElement descriptionElement = new WebDriverWait(driver, 10)
+                    .until(ExpectedConditions.presenceOfElementLocated(
+                            By.cssSelector("div:nth-of-type(3) p:not(:empty)")));
             movie.setDescription(descriptionElement.getText());
 
+            // For Release Date
             WebElement releaseDateElement = new WebDriverWait(driver, 10)
-                    .until(ExpectedConditions
-                            .presenceOfElementLocated(By.cssSelector("ul.list-separator.list-title strong + a")));
+                    .until(ExpectedConditions.presenceOfElementLocated(
+                            By.cssSelector(
+                                    "ul.list-separator.list-title strong + a")));
             String releaseDate = releaseDateElement.getText();
 
+            // For Release Year
             WebElement releaseYearElement = new WebDriverWait(driver, 10)
                     .until(ExpectedConditions.presenceOfElementLocated(
-                            By.cssSelector("ul.list-separator.list-title a[href*='release_year']")));
+                            By.cssSelector(
+                                    "ul.list-separator.list-title a[href*='release_year']")));
             String releaseYear = releaseYearElement.getText();
 
-            movie.setReleaseDate(releaseDate + " " + releaseYear);
+            // Combining release date and release year
+            String releaseDateAndYear = releaseDate + " " + releaseYear;
+
+            // Setting release date and release year in the movie object
+            movie.setReleaseDate(releaseDateAndYear);
+
+            // WebElement releaseDateElement = new WebDriverWait(driver, 10)
+            // .until(ExpectedConditions.presenceOfElementLocated(
+            // By.cssSelector(
+            // "div[id^='w'] > div.columns.small-12.medium-7.large-6 > ul:nth-child(1) >
+            // li:nth-child(3)")));
+            // movie.setReleaseDate(releaseDateElement.getText());
+
             List<WebElement> genreElements = row.findElements(By.cssSelector("ul.list-separator.list-title li > a"));
             List<String> genres = new ArrayList<>();
             for (WebElement genreElement : genreElements) {
@@ -78,9 +95,10 @@ public class ScrapeData {
         }
 
         // Save data to database and DynamoDB
+
         DatabaseUtil databaseUtil = new DatabaseUtil();
-        databaseUtil.saveDataToDatabase(movies, type);
+        databaseUtil.saveMoviesToDatabase(movies);
         DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
-        dynamoDBUtil.saveDataToDynamoDB(movies);
+        dynamoDBUtil.saveMoviesToDynamoDB(movies);
     }
 }

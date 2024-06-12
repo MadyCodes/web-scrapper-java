@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 
 import com.example.webscrapingfl.scrapper.ScrapeData;
+// import com.example.webscrapingfl.scrapper.ScrapeData;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -27,14 +28,22 @@ public class WebscrapingflApplication {
     public CommandLineRunner commandLineRunner() {
         return args -> {
             // Initialize WebDriver and ExecutorService
-            System.setProperty("webdriver.chrome.driver",
+            System.setProperty("webdriver.chrome.driver", // add your chromedriver path here if you are executing it as
+                                                          // it is based on my pc
                     "/Users/vishnumadhav/Desktop/chromedriver-mac-arm64-final/chromedriver");
             WebDriver driver = new ChromeDriver();
-            ExecutorService executor = Executors.newFixedThreadPool(1);
+            ExecutorService executor = Executors.newFixedThreadPool(5);
+
             ScrapeData scrape = new ScrapeData();
+
+            ScrapeTVShows scrap = new ScrapeTVShows();
+
+            scrap.scrapeShows(driver, "https://elcinema.com/en/index/work/category/3/",
+                    "tvShow");
+
             // Scrape data
+
             scrape.scrapeData(driver, "https://elcinema.com/en/now/", "movie");
-            // scrapeData(driver, "https://elcinema.com/en/tv-shows", "tv-show");
 
             // Quit WebDriver
             driver.quit();
