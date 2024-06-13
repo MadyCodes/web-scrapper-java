@@ -68,7 +68,7 @@ public class ScrapeTVShows {
         DatabaseUtil databaseUtil = new DatabaseUtil();
         databaseUtil.saveTVShowsToDatabase(tvShows);
 
-        DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
+        // DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
         // dynamoDBUtil.saveDataToDynamoDB(tvShows);
     }
 }
