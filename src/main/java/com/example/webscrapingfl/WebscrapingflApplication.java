@@ -58,7 +58,7 @@ public class WebscrapingflApplication {
     @Bean
     public Dotenv dotenv() {
         return Dotenv.configure()
-                .directory("/Users/vishnumadhav/Desktop/web-scrapper-selenium/src/main/resources")
+                .directory("/Users/vishnumadhav/Desktop/web-scrapper-selenium/.env")
                 .load();
     }
 
