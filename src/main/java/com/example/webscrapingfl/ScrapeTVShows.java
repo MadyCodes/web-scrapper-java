@@ -33,27 +33,14 @@ public class ScrapeTVShows {
             WebElement releaseYearElement = row.findElement(By.cssSelector("td:nth-child(5)"));
             String releaseYear = releaseYearElement.getText();
             tvShow.setDate(releaseYear);
+            // Extract TV show rating
+            WebElement ratingElement = row.findElement(By.cssSelector("td div.stars-rating-lg[title]"));
+            String ratingText = ratingElement.getAttribute("title");
+            String ratingValue = ratingText.replaceAll("[^0-9\\.]+", ""); // extract only the numeric value
+            tvShow.setRating(ratingValue);
+
             tvShows.add(tvShow);
         }
-        // for (WebElement row : rows) {
-        // TVShow tvShow = new TVShow();
-        // // Extract TV show name
-        // WebElement nameElement = row.findElement(By.cssSelector("td a"));
-        // tvShow.setName(nameElement.getText());
-
-        // // Extract TV show date
-        // WebElement seriesYearElement =
-        // row.findElement(By.cssSelector("td:nth-child(5)"));
-        // tvShow.setDate(seriesYearElement.getText());
-
-        // // Extract TV show rating
-        // WebElement ratingElement = row.findElement(By.cssSelector("td
-        // div.stars-rating-lg span.legend"));
-        // tvShow.setRating(ratingElement.getText().trim());
-
-        // // Add TV show to the list
-        // tvShows.add(tvShow);
-        // }
 
         System.out.println("TV Shows scraped: " + tvShows.size());
 
@@ -68,7 +55,7 @@ public class ScrapeTVShows {
         DatabaseUtil databaseUtil = new DatabaseUtil();
         databaseUtil.saveTVShowsToDatabase(tvShows);
 
-        // DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
-        // dynamoDBUtil.saveDataToDynamoDB(tvShows);
+        DynamoDBUtil dynamoDBUtil = new DynamoDBUtil();
+        dynamoDBUtil.saveTVShowsToDynamoDB(tvShows);
     }
 }

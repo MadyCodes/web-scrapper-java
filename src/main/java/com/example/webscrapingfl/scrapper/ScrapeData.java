@@ -33,7 +33,7 @@ public class ScrapeData {
 
             WebElement descriptionElement = new WebDriverWait(driver, 10)
                     .until(ExpectedConditions.presenceOfElementLocated(
-                            By.cssSelector("div:nth-of-type(3) p:not(:empty)")));
+                            By.cssSelector("div.columns p:not(:empty)")));
             movie.setDescription(descriptionElement.getText());
 
             // For Release Date
@@ -75,7 +75,6 @@ public class ScrapeData {
             for (WebElement castElement : castElements) {
                 cast.add(castElement.getText());
             }
-
             movie.setCast(cast);
 
             movies.add(movie);

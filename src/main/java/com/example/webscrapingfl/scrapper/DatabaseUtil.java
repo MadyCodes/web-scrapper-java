@@ -27,38 +27,39 @@ public class DatabaseUtil {
 
             Connection connection = DriverManager.getConnection(dbUrl, username, password);
             Statement statement = connection.createStatement();
-            String createTableQueryWithAllFields = "CREATE TABLE IF NOT EXISTS movieDetails (" +
+            String createTableQuerymovie = "CREATE TABLE IF NOT EXISTS movieDetails (" +
                     "id INT AUTO_INCREMENT, " +
                     "title VARCHAR(255), " +
                     "release_date VARCHAR(255), " +
-                    "description TEXT, " +
-                    "genre VARCHAR(255), " +
-                    "cast VARCHAR(255), " +
+                    // "description TEXT, " +
+                    // "genre VARCHAR(255), " +
+                    // "cast VARCHAR(255), " +
                     "PRIMARY KEY (id)" +
                     ")";
-            statement.executeUpdate(createTableQueryWithAllFields);
+            statement.executeUpdate(createTableQuerymovie);
             try (PreparedStatement pstmt = conn
                     .prepareStatement(
-                            "INSERT INTO movieDetails (title, release_date, description, genre, cast) VALUES (?,?,?,?,?)")) {
+                            "INSERT INTO movieDetails (title, release_date) VALUES (?,?)")) {
                 for (Movie movie : movies) {
                     pstmt.setString(1, movie.getTitle());
                     pstmt.setString(2, movie.getReleaseDate());
-                    pstmt.setString(3, movie.getDescription());
-                    pstmt.setString(4, movie.getGenres().toString());
-                    pstmt.setString(5, movie.getCasts().toString());
+                    // pstmt.setString(3, movie.getDescription());
+                    // pstmt.setString(4, movie.getGenres().toString());
+                    // pstmt.setString(5, movie.getCasts().toString());
                     pstmt.addBatch();
                 }
 
                 pstmt.executeBatch();
-                System.out.println("Movie Data stored in SQL");
+                System.out.println("Movie Title and release date stored in SQL");
             }
         } catch (SQLException e) {
             e.printStackTrace();
             try (PrintWriter writer = new PrintWriter(new FileWriter("output__sql_movies" + ".csv"))) {
                 writer.println("Title,Release Date, Description, Genre, Cast");
                 for (Movie movie : movies) {
-                    writer.println(movie.getTitle() + "," + movie.getReleaseDate() + "," + movie.getDescription() + ","
-                            + movie.getGenres() + "," + movie.getCasts());
+                    writer.println(movie.getTitle() + "," + movie.getReleaseDate());
+                    // + "," + movie.getDescription() + ","
+                    // + movie.getGenres() + "," + movie.getCasts());
                 }
                 System.out.println("Output written to output__sql_movies" + ".csv");
             } catch (IOException ex) {
@@ -85,12 +86,6 @@ public class DatabaseUtil {
             Connection connection = DriverManager.getConnection(dbUrl, username, password);
             Statement statement = connection.createStatement();
 
-            // String createTableQuery = "CREATE TABLE IF NOT EXISTS movies (" +
-            // "id INT AUTO_INCREMENT, " +
-            // "title VARCHAR(255), " +
-            // "release_date VARCHAR(255), " +
-            // "PRIMARY KEY (id)" +
-            // ")";
             String createTableQuery = "CREATE TABLE IF NOT EXISTS tvshowDetails (" +
                     "id INT AUTO_INCREMENT, " +
                     "name VARCHAR(255), " +
@@ -116,7 +111,7 @@ public class DatabaseUtil {
                 }
 
                 pstmt.executeBatch();
-                System.out.println("TV Show Data stored in SQL");
+                System.out.println("TV Show Name and release year stored in SQL");
             }
         } catch (SQLException e) {
             e.printStackTrace();
